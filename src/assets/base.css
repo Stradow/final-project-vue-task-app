@@ -1,4 +1,4 @@
-/* color palette from <https://github.com/vuejs/theme> */
+/* Color palette from <https://github.com/vuejs/theme> */
 :root {
   --vt-c-white: #ffffff;
   --vt-c-white-soft: #f8f8f8;
@@ -21,7 +21,7 @@
   --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
 }
 
-/* semantic color variables for this project */
+/* Semantic color variables for this project */
 :root {
   --color-background: var(--vt-c-white);
   --color-background-soft: var(--vt-c-white-soft);
@@ -65,7 +65,7 @@ body {
   transition:
     color 0.5s,
     background-color 0.5s;
-  line-height: 1.6;
+  line-height: 1.7; /* Slightly increased for better readability */
   font-family:
     Inter,
     -apple-system,
@@ -79,8 +79,153 @@ body {
     'Droid Sans',
     'Helvetica Neue',
     sans-serif;
-  font-size: 15px;
+  font-size: 16px; /* Increased font size for better readability */
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: hsla(160, 100%, 37%, 1);
+  transition: color 0.4s, background-color 0.4s; /* Added transition for color change */
+  padding: 3px;
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: hsla(160, 100%, 37%, 0.2);
+    border-radius: 4px; /* Added border-radius for smoother appearance */
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+    display: flex;
+    align-items: center;
+  }
+
+  #app {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 0 10rem;
+  }
+}
+
+header {
+  line-height: 1.5;
+  max-height: 100vh;
+  margin-bottom: 2rem; /* Added margin-bottom for better spacing */
+}
+
+.logo {
+  display: block;
+  margin: 0 auto 2rem;
+  max-width: 200px; /* Added max-width for logo */
+}
+
+nav {
+  width: 100%;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+nav a.router-link-exact-active {
+  color: var(--color-text);
+}
+
+nav a.router-link-exact-active:hover {
+  background-color: transparent;
+}
+
+nav a {
+  display: inline-block;
+  padding: 0 1rem;
+  border-left: 1px solid var(--color-border);
+}
+
+nav a:first-of-type {
+  border: 0;
+}
+
+@media (min-width: 1024px) {
+  header {
+    display: flex;
+    align-items: center; /* Changed place-items to align-items */
+    padding-right: calc(var(--section-gap) / 2);
+  }
+
+  .logo {
+    margin: 0 2rem 0 0;
+  }
+
+  header .wrapper {
+    display: flex;
+    align-items: flex-start; /* Changed place-items to align-items */
+    flex-wrap: wrap;
+  }
+
+  nav {
+    text-align: left;
+    margin-left: -1rem;
+    font-size: 1rem;
+
+    padding: 1rem 0;
+    margin-top: 1rem;
+  }
+}
+
+h1 {
+  font-weight: 600; /* Increased font-weight for better emphasis */
+  font-size: 2rem; /* Increased font-size for better emphasis */
+  position: relative;
+  margin-bottom: 1rem; /* Added margin-bottom for better spacing */
+}
+
+h3 {
+  font-size: 1.4rem; /* Increased font-size for better emphasis */
+  margin-bottom: 1rem; /* Added margin-bottom for better spacing */
+}
+
+.greetings h1,
+.greetings h3 {
+  text-align: center;
+}
+
+@media (min-width: 1024px) {
+  .greetings h1,
+  .greetings h3 {
+    text-align: left;
+  }
+}
+
+/* Additional Styles for Better Appearance */
+.container {
+  padding: 2rem;
+  margin-top: 2rem;
+  background: var(--color-background-soft);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button {
+  background-color: hsla(160, 100%, 37%, 1);
+  color: var(--vt-c-white);
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: hsla(160, 100%, 42%, 1);
 }
