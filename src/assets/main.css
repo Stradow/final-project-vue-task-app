@@ -11,20 +11,21 @@ a,
 .green {
   text-decoration: none;
   color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
+  transition: color 0.4s, background-color 0.4s; /* Added transition for smoother interaction */
   padding: 3px;
 }
 
 @media (hover: hover) {
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);
+    border-radius: 4px; /* Added border-radius for smoother appearance */
   }
 }
 
 @media (min-width: 1024px) {
   body {
     display: flex;
-    place-items: center;
+    align-items: center; /* Changed place-items to align-items */
   }
 
   #app {
@@ -34,8 +35,7 @@ a,
   }
 }
 
-/* Imnported from about.vue page */
-
+/* Imported from about.vue page */
 @media (min-width: 1024px) {
   .container {
     align-items: center;
@@ -43,20 +43,21 @@ a,
 }
 
 /* Imported from app.vue */
-
 header {
   line-height: 1.5;
   max-height: 100vh;
+  margin-bottom: 2rem; /* Added margin-bottom for better spacing */
 }
 
 .logo {
   display: block;
   margin: 0 auto 2rem;
+  max-width: 200px; /* Added max-width for logo */
 }
 
 nav {
   width: 100%;
-  font-size: 12px;
+  font-size: 14px; /* Increased font-size for better readability */
   text-align: center;
   margin-top: 2rem;
 }
@@ -82,7 +83,7 @@ nav a:first-of-type {
 @media (min-width: 1024px) {
   header {
     display: flex;
-    place-items: center;
+    align-items: center; /* Changed place-items to align-items */
     padding-right: calc(var(--section-gap) / 2);
   }
 
@@ -92,7 +93,7 @@ nav a:first-of-type {
 
   header .wrapper {
     display: flex;
-    place-items: flex-start;
+    align-items: flex-start; /* Changed place-items to align-items */
     flex-wrap: wrap;
   }
 
@@ -100,23 +101,22 @@ nav a:first-of-type {
     text-align: left;
     margin-left: -1rem;
     font-size: 1rem;
-
     padding: 1rem 0;
     margin-top: 1rem;
   }
 }
 
-/* Imported from HelloWorld.vue comp */
-
+/* Imported from HelloWorld.vue component */
 h1 {
-  font-weight: 500;
-  font-size: 1.5rem;
+  font-weight: 600; /* Increased font-weight for better emphasis */
+  font-size: 2rem; /* Increased font-size for better emphasis */
   position: relative;
-  top: -10px;
+  margin-bottom: 1rem; /* Added margin-bottom for better spacing */
 }
 
 h3 {
-  font-size: 1.2rem;
+  font-size: 1.4rem; /* Increased font-size for better emphasis */
+  margin-bottom: 1rem; /* Added margin-bottom for better spacing */
 }
 
 .greetings h1,
@@ -129,4 +129,27 @@ h3 {
   .greetings h3 {
     text-align: left;
   }
+}
+
+/* Additional Styles for Better Appearance */
+.container {
+  padding: 2rem;
+  margin-top: 2rem;
+  background: var(--color-background-soft);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button {
+  background-color: hsla(160, 100%, 37%, 1);
+  color: var(--vt-c-white);
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: hsla(160, 100%, 42%, 1);
 }
