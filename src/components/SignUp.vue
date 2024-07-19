@@ -1,8 +1,3 @@
-<!--
-This file defines a Vue.js component for the sign-up process in a to-do application.
-By building this component, we will achieve a user interface that allows users to register by providing their email and password, with state management handled by Pinia.js.
--->
-
 <template>
   <div class="container">
     <div class="header">
@@ -29,26 +24,26 @@ By building this component, we will achieve a user interface that allows users t
         <!-- Password Input Field -->
         <div class="form-input">
           <label class="input-field-label">Password</label>
-          <input
-            type="password"
-            class="input-field"
-            placeholder="**********"
-            id="password"
-            v-model="formState.password"
-            required
-          />
+          <div class="password-wrapper">
+            <input :type="passwordFieldType" v-model="formState.password" placeholder="**********" />
+            <font-awesome-icon
+              :icon="passwordFieldType === 'password' ? 'eye' : 'eye-slash'"
+              @click="togglePasswordVisibility"
+              class="password-toggle-icon"
+            />
+          </div>
         </div>
         <!-- Confirm Password Input Field -->
         <div class="form-input">
           <label class="input-field-label">Confirm password</label>
-          <input
-            type="password"
-            class="input-field"
-            placeholder="**********"
-            id="confirmPassword"
-            v-model="formState.confirmPassword"
-            required
-          />
+          <div class="password-wrapper">
+            <input :type="confirmPasswordFieldType" v-model="formState.confirmPassword" placeholder="**********" />
+            <font-awesome-icon
+              :icon="confirmPasswordFieldType === 'password' ? 'eye' : 'eye-slash'"
+              @click="toggleConfirmPasswordVisibility"
+              class="password-toggle-icon"
+            />
+          </div>
         </div>
         <!-- Sign Up Button -->
         <button class="button" type="submit">Sign Up</button>
@@ -75,13 +70,19 @@ By building this component, we will achieve a user interface that allows users t
 // ------------------------------------------------------------------------
 
 // Importing reactive from Vue to create a reactive form state object
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 // Importing useRouter from vue-router for navigation
 import { useRouter } from "vue-router";
 // Importing PersonalRouter component for navigation links
 import PersonalRouter from "./PersonalRouter.vue";
 // Importing the useUserStore function from userStore to interact with the user store
 import { useUserStore } from "../stores/user";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
+// Add Font Awesome icons to the library
+library.add(faEye, faEyeSlash);
 
 // ------------------------------------------------------------------------
 // Variables Block
@@ -105,6 +106,10 @@ const formState = reactive({
 const router = useRouter();
 // Store user accessed easily here
 const userStore = useUserStore();
+
+// Reactive variables to store the password field types
+const passwordFieldType = ref('password');
+const confirmPasswordFieldType = ref('password');
 
 // ------------------------------------------------------------------------
 // Functions Block
@@ -136,6 +141,20 @@ const signUp = () => {
   }, 2000);
 };
 
+/**
+ * Function to toggle the visibility of the password field.
+ */
+const togglePasswordVisibility = () => {
+  passwordFieldType.value = passwordFieldType.value === 'password' ? 'text' : 'password';
+};
+
+/**
+ * Function to toggle the visibility of the confirm password field.
+ */
+const toggleConfirmPasswordVisibility = () => {
+  confirmPasswordFieldType.value = confirmPasswordFieldType.value === 'password' ? 'text' : 'password';
+};
+
 /*
   The signUp function handles the registration process.
   - It checks if the passwords match and, if so, calls the register function from the user store to register the user.
@@ -145,6 +164,14 @@ const signUp = () => {
   */
 </script>
 
-<style>
-/* Style section remains unchanged */
+<style scoped>
+label,
+input {
+  display: block;
+  width: 100%;
+}
+
+button {
+  margin: 0.5rem 0;
+}
 </style>

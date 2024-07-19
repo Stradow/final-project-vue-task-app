@@ -33,6 +33,12 @@ export const useTaskStore = defineStore("taskStore", () => {
         timeToBeCompleted: "2 hours", // Estimated time to complete the task
         extraInfoRequired: ["Guacamole", "Nachos"], // Additional information required for the task
       },
+      dueDate: '2024-07-20',
+      priority: 'High',
+      subtasks: [
+        { id: 1, title: 'Buy Guacamole', isCompleted: false },
+        { id: 2, title: 'Buy Nachos', isCompleted: false },
+      ],
       isCompleted: true, // Boolean indicating if the task is completed
       userId: 1, // Link task to user with id 1
     },
@@ -44,6 +50,8 @@ export const useTaskStore = defineStore("taskStore", () => {
         timeToBeCompleted: "1 hour", // Estimated time to complete the task
         extraInfoRequired: ["swap", "mop", "dust"], // Additional information required for the task
       },
+      dueDate: '2024-07-21',
+      priority: 'Medium',
       isCompleted: false, // Boolean indicating if the task is completed
       userId: 2, // Link task to user with id 2
     },
@@ -69,28 +77,30 @@ export const useTaskStore = defineStore("taskStore", () => {
   */
 
   // ----------------------------------------------------------------------
-  // Function to mark a task as completed
+  // Function to toggle task completion
   // ----------------------------------------------------------------------
 
   /**
-   * Marks a specific task as completed.
-   * @param {number} taskId - The ID of the task to be marked as completed.
+   * Toggles the completion status of a specific task.
+   * @param {number} taskId - The ID of the task to be toggled.
    */
-  function markTaskCompleted(taskId) {
-    // Find the task by its ID
-    let task = tasks.find((task) => task.id === taskId);
-    // If task is found, mark it as completed
-    if (task) {
-      task.isCompleted = true; // Set the task's isCompleted property to true
+  function toggleTaskCompletion(taskId) {
+  let task = tasks.find((task) => task.id === taskId);
+  if (task) {
+    task.isCompleted = !task.isCompleted; // Toggle the completion state
+    if (task.isCompleted) {
+      task.subtasks = []; // Clear the subtasks if the task is completed
     }
   }
+}
+
 
   /*
-  The markTaskCompleted function is used to mark a specific task as completed.
+  The toggleTaskCompletion function is used to toggle the completion status of a specific task.
   - It takes a taskId as a parameter.
   - It finds the task in the tasks array that has the same id as the taskId.
-  - If a task with the specified id is found, it sets the isCompleted property of that task to true.
-  - This function allows for changing the state of a task to reflect its completion status.
+  - If a task with the specified id is found, it toggles the isCompleted property of that task.
+  - This function allows for toggling the state of a task between completed and not completed.
   */
 
   // ----------------------------------------------------------------------
@@ -159,6 +169,9 @@ export const useTaskStore = defineStore("taskStore", () => {
         id: Date.now(), // Unique identifier for the task - we are using the DATE.now method from JS to generate a random 12 Digit Characters
         title: taskTitle, // Title of the task
         description: taskDescription,
+        dueDate: new Date().toISOString().slice(0, 10),
+        priority: 'Medium',
+        subtasks: [],
         isCompleted: false, // Boolean indicating if the task is completed
         userId: userStore.user.id, // It will link the newTask to that specific user by allocating the userID to this particular key.
       };
@@ -168,13 +181,77 @@ export const useTaskStore = defineStore("taskStore", () => {
     }
   }
 
-  /*
-The generateTaskForCurrentUser function creates a new task for the currently logged-in user. 
-It first retrieves the user information and checks if a user is logged in. If so, it constructs a 
-new task with a unique identifier, provided title and description, and associates it with the 
-logged-in user. The task is then added to the tasks array. If no user is logged in, the function 
-throws an error.
-*/
+  // ----------------------------------------------------------------------
+  // Function to edit a task
+  // ----------------------------------------------------------------------
+
+  /**
+   * Edits an existing task.
+   * @param {number} taskId - The ID of the task to be edited.
+   * @param {Object} updatedTask - The updated task object.
+   */
+  function editTask(taskId, updatedTask) {
+    let taskIndex = tasks.findIndex(task => task.id === taskId);
+    if (taskIndex !== -1) {
+      tasks[taskIndex] = { ...tasks[taskIndex], ...updatedTask };
+    }
+  }
+
+  // ----------------------------------------------------------------------
+  // Function to add a subtask
+  // ----------------------------------------------------------------------
+
+  /**
+   * Adds a subtask to a task.
+   * @param {number} taskId - The ID of the task to add a subtask to.
+   * @param {Object} subtask - The subtask object to be added.
+   */
+  function addSubtask(taskId, subtask) {
+    let task = tasks.find(task => task.id === taskId);
+    if (task) {
+      task.subtasks.push(subtask);
+    }
+  }
+
+  // ----------------------------------------------------------------------
+  // Function to edit a subtask
+  // ----------------------------------------------------------------------
+
+  /**
+   * Edits a subtask of a task.
+   * @param {number} taskId - The ID of the task.
+   * @param {number} subtaskId - The ID of the subtask to be edited.
+   * @param {Object} updatedSubtask - The updated subtask object.
+   */
+  function editSubtask(taskId, subtaskId, updatedSubtask) {
+    let task = tasks.find(task => task.id === taskId);
+    if (task) {
+      let subtaskIndex = task.subtasks.findIndex(subtask => subtask.id === subtaskId);
+      if (subtaskIndex !== -1) {
+        task.subtasks[subtaskIndex] = { ...task.subtasks[subtaskIndex], ...updatedSubtask };
+      }
+    }
+  }
+
+  // ----------------------------------------------------------------------
+  // Function to sort tasks
+  // ----------------------------------------------------------------------
+
+  /**
+   * Sorts tasks based on the specified criteria.
+   * @param {string} criteria - The criteria to sort tasks by ('dueDate', 'priority', 'completion').
+   * @returns {Array} - A sorted array of tasks.
+   */
+  function sortTasks(criteria) {
+    if (criteria === 'dueDate') {
+      return tasks.slice().sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+    } else if (criteria === 'priority') {
+      const priorityMap = { 'High': 1, 'Medium': 2, 'Low': 3 };
+      return tasks.slice().sort((a, b) => priorityMap[a.priority] - priorityMap[b.priority]);
+    } else if (criteria === 'completion') {
+      return tasks.slice().sort((a, b) => a.isCompleted - b.isCompleted);
+    }
+  }
 
   // ----------------------------------------------------------------------
   // Return statement to export all pieces of data or functions globally
@@ -182,16 +259,22 @@ throws an error.
   return {
     tasks,
     addTask,
-    markTaskCompleted,
+    toggleTaskCompletion, // Add the new function to the return statement
     deleteTask,
     getTasksByUserId,
     generateTaskForCurrentUser,
+    editTask,
+    addSubtask,
+    editSubtask,
+    sortTasks,
   };
 });
 
 /*
 Summary:
 This file defines a Pinia store for managing tasks in a to-do application. It includes an initial set of tasks and provides 
-functions to add, mark as completed, delete, and filter tasks by user ID. The state management is reactive, ensuring that 
+functions to add, mark as completed, delete, edit, and filter tasks by user ID. It also supports the addition and editing of 
+subtasks, and sorting tasks by due date, priority, or completion status. The state management is reactive, ensuring that 
 any changes to the tasks are automatically reflected in the Vue.js components that use this store.
 */
+

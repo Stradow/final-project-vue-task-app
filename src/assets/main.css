@@ -153,3 +153,24 @@ button {
 button:hover {
   background-color: hsla(160, 100%, 42%, 1);
 }
+
+/* Password Input and Toggle Icon */
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper input {
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 2rem; /* Adjust padding to make room for the icon */
+}
+
+.password-toggle-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #ccc;
+}

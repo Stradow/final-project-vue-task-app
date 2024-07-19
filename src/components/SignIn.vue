@@ -1,30 +1,28 @@
-<!--
-This file defines a Vue.js component for the login process in a to-do application.
-By building this component, we will achieve a user interface that allows users to log in by providing their email and password, with state management handled by Pinia.js.
--->
-
 <template>
   <div class="container">
     <h3 class="header-title">Log In to ToDo App</h3>
-    <!-- FORM GOES HERE -->
     <form @submit.prevent="signIn">
       <div class="form">
         <!-- Email Input -->
-        <label
-          >Email
-          <input id="email" type="text" v-model="formState.email" />
+        <label>
+          Email
+          <input id="email" type="text" v-model="formState.email" placeholder="example@gmail.com" />
         </label>
         <!-- Password Input -->
-        <label
-          >Password
-          <input id="password" type="password" v-model="formState.password" />
+        <label>
+          Password
+          <div class="password-wrapper">
+            <input :type="passwordFieldType" v-model="formState.password" placeholder="**********" />
+            <font-awesome-icon
+              :icon="passwordFieldType === 'password' ? 'eye' : 'eye-slash'"
+              @click="togglePasswordVisibility"
+              class="password-toggle-icon"
+            />
+          </div>
         </label>
-        <!-- Button -->
-        <!-- I personally like semantic elements, I think they are easier to read as an engineer -->
         <button type="submit">Log In</button>
       </div>
     </form>
-    <!-- END FORM -->
     <!-- Error Message Here -->
     <p v-show="formState.errorMsg">{{ formState.errorMsg }}</p>
     <!-- END Error Message -->
@@ -45,17 +43,22 @@ By building this component, we will achieve a user interface that allows users t
 // Import Block
 // ------------------------------------------------------------------------
 
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import PersonalRouter from "./PersonalRouter.vue";
 import { useUserStore } from "../stores/user";
 import { storeToRefs } from "pinia";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
+// Add Font Awesome icons to the library
+library.add(faEye, faEyeSlash);
 
 // ------------------------------------------------------------------------
 // Variables Block
 // ------------------------------------------------------------------------
 
-// Route Variables for navigating users
 const route = "/auth/register";
 const buttonText = "Sign Up";
 
@@ -73,6 +76,9 @@ const userStore = useUserStore();
 // Destructure the variable 'isLoggedIn' out of the store, keeping its reactivity using the storeToRefs method from Pinia
 const { isLoggedIn } = storeToRefs(userStore);
 
+// Reactive variable to store the password field type
+const passwordFieldType = ref('password');
+
 // ------------------------------------------------------------------------
 // Functions Block
 // ------------------------------------------------------------------------
@@ -83,7 +89,7 @@ const { isLoggedIn } = storeToRefs(userStore);
  * On success, it redirects the user to the home page.
  * On failure, it displays an error message.
  */
-let signIn = () => {
+const signIn = () => {
   try {
     // 1- Hitting the user store, and hitting a function that is used to LOG IN
     userStore.signIn(formState.email, formState.password);
@@ -102,6 +108,13 @@ let signIn = () => {
   }
 };
 
+/**
+ * Function to toggle the visibility of the password field.
+ */
+const togglePasswordVisibility = () => {
+  passwordFieldType.value = passwordFieldType.value === 'password' ? 'text' : 'password';
+};
+
 /*
   The signIn function handles the login process.
   - It validates the user's credentials using the signIn function from the user store.
@@ -114,6 +127,7 @@ let signIn = () => {
 label,
 input {
   display: block;
+  width: 100%;
 }
 
 button {
